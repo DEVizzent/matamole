@@ -2,7 +2,6 @@
 #define ScoreDisplay_h
 
 #include "Arduino.h"
-#include "arduino-timer.h"
 
 class ScoreDisplay
 {

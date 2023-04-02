@@ -2,12 +2,14 @@
 #include "ScoreDisplay.h"
 #include "LedManager.h"
 #include "ButtonManager.h"
+#include "GameMole.h"
 #include "arduino-timer.h"
 enum LoopAction {initGame, startGame, game, endGame};
 LoopAction loopAction;
 ScoreDisplay scoreDisplay;
 LedManager ledManager;
 ButtonManager buttonManager;
+GameMole gameMole;
 int score = 0;
 Timer<> timer;
 
@@ -19,6 +21,7 @@ void setup ()
   int analogicPin5 = A5;
   ledManager = LedManager(analogicPin5, 2, 3, 4, 5);
   buttonManager = ButtonManager(6, 7, 8, 9, 10);
+  gameMole = GameMole(buttonManager, ledManager, scoreDisplay);
   timer.every(5, displayScore);
 }
 bool displayScore(){
@@ -37,7 +40,6 @@ void gameLoop() {
 }
 
 void initLoop() {
-  scoreDisplay.updateScore(22);
   ledManager.enable(0);
   ledManager.enable(1);
   ledManager.enable(2);
