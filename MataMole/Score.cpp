@@ -3,7 +3,7 @@
 Score::Score() {
     score = 0;
     combo = 0;
-    comboBonus = 1.0;
+    comboBonus = 0;
 }
 void Score::hit() {
     score += MOLE + comboBonus;
@@ -12,8 +12,10 @@ void Score::hit() {
 }
 void Score::miss()
 {
-    combo -= COMBO_MISS_PENALTY;
-    updateComboBonus();
+    if (comboBonus > -4) {
+        combo -= COMBO_MISS_PENALTY;
+        updateComboBonus();
+    }
 }
 void Score::fail() 
 {
@@ -30,5 +32,5 @@ int Score::read()
 }
 void Score::updateComboBonus()
 {
-    comboBonus = ( combo / MOLE_INC_EACH_HITS ) * MOLE_INC_AMOUNT;
+    comboBonus = ((combo > 0)? 1 : -1) *( abs(combo) / MOLE_INC_EACH_HITS ) * MOLE_INC_AMOUNT;
 };

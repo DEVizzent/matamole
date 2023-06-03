@@ -10,6 +10,7 @@ public:
   ButtonManager(int first, int second, int third, int fourth, int fifth);
   void readButtons();
   bool hasBeenPressed(int buttonNumber);
+  int getButtonPressed();
 private:
   int _pins[NUMBER_OF_BUTTONS];
   bool _lastStatus[NUMBER_OF_BUTTONS];

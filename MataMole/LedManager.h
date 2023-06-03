@@ -11,6 +11,9 @@ public:
   LedManager(int first, int second, int third, int fourth, int fifth);
   void enable(int ledNumber);
   void disable(int ledNumber);
+  void enableAll();
+  void disableAll();
+  void toggle(int ledNumber);
 private:
   int _pins[NUMBER_OF_LEDS];
 };

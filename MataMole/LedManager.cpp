@@ -15,12 +15,26 @@ LedManager::LedManager(int first, int second, int third, int fourth, int fifth)
   }
 }
 
+void LedManager::toggle(int ledNumber) {
+  digitalWrite(_pins[ledNumber], !digitalRead(_pins[ledNumber]));
+}
+
 void LedManager::enable(int ledNumber) {
   digitalWrite(_pins[ledNumber], HIGH);
 }
 
 void LedManager::disable(int ledNumber) {
-  Serial.print("Led to disable: ");
-  Serial.println(_pins[ledNumber]);
   digitalWrite(_pins[ledNumber], LOW);
+}
+
+void LedManager::enableAll() {
+  for(int i = 0; i < NUMBER_OF_LEDS; i++) {
+    digitalWrite(_pins[i], HIGH);
+  }
+}
+
+void LedManager::disableAll() {
+  for(int i = 0; i < NUMBER_OF_LEDS; i++) {
+    digitalWrite(_pins[i], LOW);
+  }
 }
