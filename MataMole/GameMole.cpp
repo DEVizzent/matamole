@@ -16,13 +16,20 @@ void GameMole::initialize(int difficulty)
   juicyTime = 500 / (difficulty + 1);
   moleTime = 5000 / (difficulty + 1);
   score = Score();
+  hasToUpdateNumberOfActiveMoles = true;
+  numberOfMolesMustBeActive = 2;
 }
 
 bool GameMole::loop()
 {
   resolveButtonsPressed();
   scoreDisplay->updateScore(score.read());
-  if (countActiveMoles < random(1,3)) {
+  if (hasToUpdateNumberOfActiveMoles) {
+    hasToUpdateNumberOfActiveMoles = false;
+    numberOfMolesMustBeActive = generateNumberOfMolesMustBeActive();
+    Serial.println(numberOfMolesMustBeActive);
+  }
+  if (numberOfMolesMustBeActive > countActiveMoles) {
     activateRandomMole();
   }
   return true;
@@ -61,7 +68,8 @@ void GameMole::deactivateMole(int mole)
 {
   activeMoles[mole] = false;
   ledManager.disable(mole); 
-  cancelEvent(mole); 
+  cancelEvent(mole);
+  hasToUpdateNumberOfActiveMoles = true;
 }
 void GameMole::missMole(int mole)
 {
@@ -72,6 +80,26 @@ void GameMole::finishMissMole(int mole)
 {
   activeMoles[mole] = false;
   score.miss();
+  hasToUpdateNumberOfActiveMoles = true;
+}
+
+int GameMole::generateNumberOfMolesMustBeActive()
+{
+  randomNumber = random(0,100);
+  Serial.println(randomNumber);
+  if (randomNumber < 15) {
+    return 0;
+  }
+  if (randomNumber < 40) {
+    return 1;
+  }
+  if (randomNumber < 85) {
+    return 2;
+  }
+  if (randomNumber < 95) {
+    return 3;
+  }
+  return 4;
 }
 
 int GameMole::getRandomUnactiveMole() 
@@ -84,6 +112,10 @@ int GameMole::getRandomUnactiveMole()
     return mole;
   }
   return -1;
+}
+void GameMole::updateNumberOfActiveMoles() 
+{
+  hasToUpdateNumberOfActiveMoles = true;
 }
 void GameMole::addEvent(int mole, String functionName, int delayTime)
 {

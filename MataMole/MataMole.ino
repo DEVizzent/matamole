@@ -1,8 +1,8 @@
 
+#include "GameMole.h"
 #include "ScoreDisplay.h"
 #include "LedManager.h"
 #include "ButtonManager.h"
-#include "GameMole.h"
 #include "arduino-timer.h"
 enum LoopAction {initGame, startGame, game, endGame, waiting};
 LoopAction loopAction;
@@ -22,8 +22,8 @@ void setup ()
   activateWaiting();
   scoreDisplay = ScoreDisplay(13, 12, 11);
   int analogicPin5 = A5;
-  ledManager = LedManager(analogicPin5, 2, 3, 4, 5);
-  buttonManager = ButtonManager(6, 7, 8, 9, 10);
+  ledManager = LedManager(23, 25, 27, 29, 31, 33, 35, 37, 39, 41);
+  buttonManager = ButtonManager(22, 24, 26, 28, 30, 32, 34, 36, 38, 40);
   gameMole = GameMole(buttonManager, ledManager, &scoreDisplay);
   timer.every(5, displayScore);
 }
@@ -39,6 +39,7 @@ void initLoop() {
   cleanGameMoleEvents();
   ledManager.disableAll();
   gameMole.initialize(difficulty);
+  timer.every(3000, updateNumberOfActiveMoles);
   timer.in(30000, finishGame);
 }
 
@@ -117,6 +118,11 @@ bool missMole(int mole) {
   return false;
 }
 
+bool updateNumberOfActiveMoles() {
+  gameMole.updateNumberOfActiveMoles();
+  return true;
+}
+
 bool finishMissMole(int mole) {
   gameMole.finishMissMole(mole);
   return false;
@@ -124,6 +130,8 @@ bool finishMissMole(int mole) {
 
 bool finishGame() {
   loopAction = endGame;
+  timer.cancel();
+  timer.every(5, displayScore);
   return false;
 }
 
